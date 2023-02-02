@@ -1,0 +1,31 @@
+version: '3'
+services:
+  container:
+    image: digitalsleuth/autopsy:latest
+    hostname: autopsy
+    container_name: autopsy
+    networks:
+      net:
+        ipv4_address: 172.25.0.3
+    ports:
+      - "33:22"
+    cap_add:
+      - SYS_ADMIN
+      - MKNOD
+    volumes:
+      - ./files/:/home/autopsy/files
+    environment:
+      - JAVA_TOOL_OPTIONS=-Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dawt.useSystemAAFontSettings=on
+    shm_size: "2gb"
+    privileged: true
+    devices:
+      - "/dev/fuse:/dev/fuse"
+      - "/dev/dri:/dev/dri"
+
+networks:
+  net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+          gateway: 172.25.0.1
